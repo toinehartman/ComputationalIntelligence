@@ -139,7 +139,7 @@ for e = 1:epochs
         p = count / size(targets_train, 2) * 100;
         fprintf('%d samples, %d correct (%f%%) MSE %f\n', size(targets_train, 2), count, p, MSE);
 
-        result(iter) = MSE;
+        result(e) = MSE;
     end
 end
 figure(1)
