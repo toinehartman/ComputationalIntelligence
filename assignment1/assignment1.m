@@ -25,6 +25,7 @@ targets_ind = targets(1:divider1, 1:end);
 %Initialize variables
 inputs = 10;
 epochs = 50;
+iterations = 10;
 hidden_neurons = 8;
 outputs = 7;
 treshold = 0.2;
@@ -42,104 +43,105 @@ error = zeros(size(targets_train, 1), outputs);
 error_total = zeros(size(targets_train, 1), 1);
 targets_calc = zeros(size(targets_train, 1), 1);
 
-for iter = 1:epochs
-    % For every product
-    for index = 1:size(features_train, 1)
-        
-        %Calculate the values of the hidden layer
-        for i = 1:hidden_neurons
-            for j = 1:inputs
-                % Calculate the value for the hidden layer using the inputs
-                % and the weights
-                temp_value_hidden_layer = temp_value_hidden_layer + weights_input_hidden(i, j) * features_train(index, j) - treshold;
+for e = 1:epochs
+    for iter = 1:iterations
+        % For every product
+        for index = 1:size(features_train, 1)
+
+            %Calculate the values of the hidden layer
+            for i = 1:hidden_neurons
+                for j = 1:inputs
+                    % Calculate the value for the hidden layer using the inputs
+                    % and the weights
+                    temp_value_hidden_layer = temp_value_hidden_layer + weights_input_hidden(i, j) * features_train(index, j) - treshold;
+                end
+
+                % Using the Sigmoid function on the hidden layer values
+                current_value = 1 / (1 + exp(-temp_value_hidden_layer));
+                % Set the hidden layer values in the matrix for these values
+                hidden_layer(i, 1) = current_value;
+                % Reset the temporary hidden layer value variable
+                temp_value_hidden_layer = 0;
             end
 
-            % Using the Sigmoid function on the hidden layer values
-            current_value = 1 / (1 + exp(-temp_value_hidden_layer));
-            % Set the hidden layer values in the matrix for these values
-            hidden_layer(i, 1) = current_value;
-            % Reset the temporary hidden layer value variable
-            temp_value_hidden_layer = 0;
-        end
+            % Calculate the values of the outputs
+            for i = 1:outputs
+                for j = 1:hidden_neurons
+                    % Calculate the value for the output layer using the
+                    % hidden layer values and the weights
+                    temp_value_output_layer = temp_value_output_layer + weights_hidden_output(i, j) * hidden_layer(j, 1) - treshold;
+                end
 
-        % Calculate the values of the outputs
-        for i = 1:outputs
-            for j = 1:hidden_neurons
-                % Calculate the value for the output layer using the
-                % hidden layer values and the weights
-                temp_value_output_layer = temp_value_output_layer + weights_hidden_output(i, j) * hidden_layer(j, 1) - treshold;
+                % Using the Sigmoid function on the output layer values
+                current_value = 1 / (1 + exp(-temp_value_output_layer));
+                % Set the output layer values in the matrix for these values
+                output_layer(i, 1) = current_value;
+                % Reset the temporary output layer variable
+                temp_value_output_layer = 0;
             end
 
-            % Using the Sigmoid function on the output layer values
-            current_value = 1 / (1 + exp(-temp_value_output_layer));
-            % Set the output layer values in the matrix for these values
-            output_layer(i, 1) = current_value;
-            % Reset the temporary output layer variable
-            temp_value_output_layer = 0;
-        end
-
-        % Set the beginning of the error_total matrix at the current index
-        % to zero
-        error_total(index, 1) = 0;
-        % Reset the error derivatives matrix every single loop
-        error_deriv = zeros(7, 1);
-        % For every output in outputs, calulate error and adjust weight
-        for k = 1:outputs
-            error(index, 1) = targets_train(k, index) - output_layer(k, 1);
-            error_total(index, 1) = error_total(index, 1) + error(index, 1);
-            error_deriv(k, 1) = output_layer(k, 1) * (1 - output_layer(k, 1)) * error(index, 1);
-
-            for j = 1:hidden_neurons
-                weight_delta = learning_rate * hidden_layer(j, 1) * error_deriv;
-                weights_hidden_output(k, j) = weights_hidden_output(k, j) + weight_delta(k, 1);
-            end
-        end
-
-        hidden_error_deriv = zeros(hidden_neurons, 1);
-        % For every hidden neuron, adjust weight for sum(output error)
-        for j = 1:hidden_neurons
-            sum_deriv_weight = 0;
-
+            % Set the beginning of the error_total matrix at the current index
+            % to zero
+            error_total(index, 1) = 0;
+            % Reset the error derivatives matrix every single loop
+            error_deriv = zeros(7, 1);
+            % For every output in outputs, calulate error and adjust weight
             for k = 1:outputs
-               sum_deriv_weight = sum_deriv_weight + error_deriv(k, 1) * weights_hidden_output(k, j);
+                error(index, 1) = targets_train(k, index) - output_layer(k, 1);
+                error_total(index, 1) = error_total(index, 1) + error(index, 1);
+                error_deriv(k, 1) = output_layer(k, 1) * (1 - output_layer(k, 1)) * error(index, 1);
+
+                for j = 1:hidden_neurons
+                    weight_delta = learning_rate * hidden_layer(j, 1) * error_deriv;
+                    weights_hidden_output(k, j) = weights_hidden_output(k, j) + weight_delta(k, 1);
+                end
             end
 
-            hidden_error_deriv(j, 1) = hidden_layer(j, 1) * (1 - hidden_layer(j, 1)) * sum_deriv_weight;
+            hidden_error_deriv = zeros(hidden_neurons, 1);
+            % For every hidden neuron, adjust weight for sum(output error)
+            for j = 1:hidden_neurons
+                sum_deriv_weight = 0;
+
+                for k = 1:outputs
+                   sum_deriv_weight = sum_deriv_weight + error_deriv(k, 1) * weights_hidden_output(k, j);
+                end
+
+                hidden_error_deriv(j, 1) = hidden_layer(j, 1) * (1 - hidden_layer(j, 1)) * sum_deriv_weight;
+            end
+
+            for i = 1:inputs
+               for j = 1 : hidden_neurons
+                  weights_input_hidden(j, i) = weights_input_hidden(j, i) + learning_rate * features_train(index, i) * hidden_error_deriv(j, 1);
+               end
+            end
+
+            [m, ind] = max(output_layer);
+            targets_calc(index, 1) = ind;
+
         end
 
-        for i = 1:inputs
-           for j = 1 : hidden_neurons
-              weights_input_hidden(j, i) = weights_input_hidden(j, i) + learning_rate * features_train(index, i) * hidden_error_deriv(j, 1);
-           end
+        fprintf('Iteration %d - ', iter);
+        count = 0;
+        for i = 1:size(targets_ind, 1)
+            if targets_ind(i, 1) == targets_calc(i, 1)
+                count = count + 1;
+            end
         end
 
-        [m, ind] = max(output_layer);
-        targets_calc(index, 1) = ind;
+        MSE = 0;
 
-    end
-
-    fprintf('Iteration %d - ', iter);
-    count = 0;
-    for i = 1:size(targets_ind, 1)
-        if targets_ind(i, 1) == targets_calc(i, 1)
-            count = count + 1;
+        for i = 1:size(error, 1)
+            MSE = MSE + error(i,1) * error(i,1);
         end
-    end
 
-    MSE = 0;
-    
-    for i = 1:size(error, 1)
-        MSE = MSE + error(i,1) * error(i,1);
-    end
-    
-    MSE = MSE / 5498;
-    
-    p = count / size(targets_train, 2) * 100;
-    fprintf('%d samples, %d correct (%f%%) MSE %f\n', size(targets_train, 2), count, p, MSE);
+        MSE = MSE / 5498;
 
-    result(iter) = MSE;
+        p = count / size(targets_train, 2) * 100;
+        fprintf('%d samples, %d correct (%f%%) MSE %f\n', size(targets_train, 2), count, p, MSE);
+
+        result(iter) = MSE;
+    end
 end
-
 figure(1)
 plot(result)
 xlabel('iteration');
