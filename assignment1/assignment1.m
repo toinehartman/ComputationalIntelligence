@@ -24,6 +24,7 @@ targets_ind = targets(1:divider1, 1:end);
 
 %Initialize variables
 inputs = 10;
+epochs = 50;
 hidden_neurons = 8;
 outputs = 7;
 treshold = 0.2;
@@ -41,38 +42,50 @@ error = zeros(size(targets_train, 1), outputs);
 error_total = zeros(size(targets_train, 1), 1);
 targets_calc = zeros(size(targets_train, 1), 1);
 
-for iter = 1:250
+for iter = 1:epochs
     % For every product
     for index = 1:size(features_train, 1)
+        
         %Calculate the values of the hidden layer
         for i = 1:hidden_neurons
             for j = 1:inputs
+                % Calculate the value for the hidden layer using the inputs
+                % and the weights
                 temp_value_hidden_layer = temp_value_hidden_layer + weights_input_hidden(i, j) * features_train(index, j) - treshold;
             end
 
-            % Sigmoid
+            % Using the Sigmoid function on the hidden layer values
             current_value = 1 / (1 + exp(-temp_value_hidden_layer));
+            % Set the hidden layer values in the matrix for these values
             hidden_layer(i, 1) = current_value;
+            % Reset the temporary hidden layer value variable
             temp_value_hidden_layer = 0;
         end
 
         % Calculate the values of the outputs
         for i = 1:outputs
             for j = 1:hidden_neurons
+                % Calculate the value for the output layer using the
+                % hidden layer values and the weights
                 temp_value_output_layer = temp_value_output_layer + weights_hidden_output(i, j) * hidden_layer(j, 1) - treshold;
             end
 
-            % Sigmoid function
+            % Using the Sigmoid function on the output layer values
             current_value = 1 / (1 + exp(-temp_value_output_layer));
+            % Set the output layer values in the matrix for these values
             output_layer(i, 1) = current_value;
+            % Reset the temporary output layer variable
             temp_value_output_layer = 0;
         end
 
+        % Set the beginning of the error_total matrix at the current index
+        % to zero
         error_total(index, 1) = 0;
+        % Reset the error derivatives matrix every single loop
         error_deriv = zeros(7, 1);
         % For every output in outputs, calulate error and adjust weight
         for k = 1:outputs
-            error(index, 1) = targets_train(1, index) - output_layer(k, 1);
+            error(index, 1) = targets_train(k, index) - output_layer(k, 1);
             error_total(index, 1) = error_total(index, 1) + error(index, 1);
             error_deriv(k, 1) = output_layer(k, 1) * (1 - output_layer(k, 1)) * error(index, 1);
 
@@ -110,15 +123,21 @@ for iter = 1:250
     for i = 1:size(targets_ind, 1)
         if targets_ind(i, 1) == targets_calc(i, 1)
             count = count + 1;
-    %     else
-    %         fprintf('Index %d: given %d, calculated %d\n', i, targets_ind(i), targets_calc(i));
         end
     end
 
+    MSE = 0;
+    
+    for i = 1:size(error, 1)
+        MSE = MSE + error(i,1) * error(i,1);
+    end
+    
+    MSE = MSE / 5498;
+    
     p = count / size(targets_train, 2) * 100;
-    fprintf('%d samples, %d correct (%f%%)\n', size(targets_train, 2), count, p);
+    fprintf('%d samples, %d correct (%f%%) MSE %f\n', size(targets_train, 2), count, p, MSE);
 
-    result(iter) = p;
+    result(iter) = MSE;
 end
 
 figure(1)
