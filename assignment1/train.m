@@ -1,15 +1,15 @@
-clear all;
-clc, clf, close;
+% clear all;
+% clc, clf, close;
 
 %Initialize variables
 inputs = 10;
-epochs = 50;
-hidden_neurons = 12;
+% epochs = 50;
+% hidden_neurons = 12;
 outputs = 7;
-treshold = 0.2;
+% threshold = 0.2;
 temp_value_hidden_layer = 0;
 temp_value_output_layer = 0;
-learning_rate = 0.1;
+% learning_rate = 0.1;
 
 %% Function starts here %%
 
@@ -57,7 +57,7 @@ for e = 1:epochs
             for j = 1:inputs
                 % Calculate the value for the hidden layer using the inputs
                 % and the weights
-                temp_value_hidden_layer = temp_value_hidden_layer + weights_input_hidden(i, j) * features_train(index, j) - treshold;
+                temp_value_hidden_layer = temp_value_hidden_layer + weights_input_hidden(i, j) * features_train(index, j) - threshold;
             end
 
             % Using the Sigmoid function on the hidden layer values
@@ -73,7 +73,7 @@ for e = 1:epochs
             for j = 1:hidden_neurons
                 % Calculate the value for the output layer using the
                 % hidden layer values and the weights
-                temp_value_output_layer = temp_value_output_layer + weights_hidden_output(i, j) * hidden_layer(j, 1) - treshold;
+                temp_value_output_layer = temp_value_output_layer + weights_hidden_output(i, j) * hidden_layer(j, 1) - threshold;
             end
 
             % Using the Sigmoid function on the output layer values
@@ -146,11 +146,8 @@ for e = 1:epochs
     result(e) = MSE;
 end
 
-figure(1)
-plot(result)
-xlabel('epoch');
-ylabel('Mean Square Error');
-title('Neural network');
-
-
-test;
+% figure(1)
+% plot(result)
+% xlabel('epoch');
+% ylabel('Mean Square Error');
+% title('Neural network');
