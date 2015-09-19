@@ -3,13 +3,13 @@
 
 %Initialize variables
 inputs = 10;
-% epochs = 50;
-% hidden_neurons = 12;
+epochs = 30;
+hidden_neurons = 7;
 outputs = 7;
-% threshold = 0.2;
+threshold = 0.1;
 temp_value_hidden_layer = 0;
 temp_value_output_layer = 0;
-% learning_rate = 0.1;
+learning_rate = 0.1;
 
 %% Function starts here %%
 
