@@ -151,9 +151,11 @@ for e = 1:epochs
     weights_hidden_output_epoch(:,:,e) = weights_hidden_output;
     weights_input_hidden_epoch(:,:,e) = weights_input_hidden;
     
-    
+    % validate the new weights.
     validation;
     
+    %when new MSE is greater than the last MSE then the old weights will be
+    %used
     if e > 1
         if MSE_v(e) > MSE_v(e-1)
             weights_hidden_output =  weights_hidden_output_epoch(:,:,e-1);
@@ -162,6 +164,7 @@ for e = 1:epochs
         end
     end
     
+    % progress
     if mod( e, 10) == 0
     
         disp(e);
