@@ -3,7 +3,7 @@ clc, clf, close;
 
 %Initialize variables
 inputs = 10;
-epochs = 300;
+epochs = 20;
 hidden_neurons = 12;
 outputs = 7;
 treshold = 0.2;
@@ -93,12 +93,17 @@ for e = 1:epochs
         error_deriv = zeros(7, 1);
         % For every output in outputs, calulate error and adjust weight
         for k = 1:outputs
+            % Calculate the error
             error(index, k) = targets_train(k, index) - output_layer(k, 1);
+            % Calculate the total error and save it
             error_total(index, 1) = error_total(index, 1) + error(index, 1);
+            % Calculate the derivative of the error
             error_deriv(k, 1) = output_layer(k, 1) * (1 - output_layer(k, 1)) * error(index, k);
 
             for j = 1:hidden_neurons
+                % Calculate the delta weight
                 weight_delta = learning_rate * hidden_layer(j, 1) * error_deriv;
+                % Update the weights of the set
                 weights_hidden_output(k, j) = weights_hidden_output(k, j) + weight_delta(k, 1);
             end
         end
@@ -106,45 +111,54 @@ for e = 1:epochs
         hidden_error_deriv = zeros(hidden_neurons, 1);
         % For every hidden neuron, adjust weight for sum(output error)
         for j = 1:hidden_neurons
+            % Initialize the sum derivate weight
             sum_deriv_weight = 0;
 
             for k = 1:outputs
+                % Calculate the sum derivative
                sum_deriv_weight = sum_deriv_weight + error_deriv(k, 1) * weights_hidden_output(k, j);
             end
-
+            
+            % Calculate the hidden error derivative (2nd error deriv for
+            % the back propagation
             hidden_error_deriv(j, 1) = hidden_layer(j, 1) * (1 - hidden_layer(j, 1)) * sum_deriv_weight;
         end
 
         for i = 1:inputs
            for j = 1 : hidden_neurons
+               % Update the weights for the input and the hidden layer
               weights_input_hidden(j, i) = weights_input_hidden(j, i) + learning_rate * features_train(index, i) * hidden_error_deriv(j, 1);
            end
         end
 
+        % Transform the output layer to a 0,1 matrix with 1 for the maximum
         [m, ind] = max(output_layer);
         targets_calc(index, 1) = ind;
 
     end
 
-%     fprintf('Epoch %d - ', e);
+    % Calculate the amount cycles
     count = 0;
     for i = 1:size(targets_ind, 1)
         if targets_ind(i, 1) == targets_calc(i, 1)
             count = count + 1;
         end
     end
-
+    
+    % Initialize the mean squared error
     MSE = 0;
 
+    % Calculate the mean squared error
     for i = 1:size(error, 1)
         MSE = MSE + error(i,1) * error(i,1);
     end
-
+    
+    % Divide the total sum of the squared error
     MSE = MSE / 5498;
 
     p = count / size(targets_train, 2) * 100;
-%     fprintf('%d samples, %d correct (%f%%) MSE %f\n', size(targets_train, 2), count, p, MSE);
 
+    % Make the MSE plottable
     result(e) = MSE;
     
     % keep track of al the last weights
@@ -154,7 +168,7 @@ for e = 1:epochs
     % validate the new weights.
     validation;
     
-    %when new MSE is greater than the last MSE then the old weights will be
+    %When new MSE is greater than the last MSE then the old weights will be
     %used
     if e > 1
         if MSE_v(e) > MSE_v(e-1)
@@ -164,7 +178,7 @@ for e = 1:epochs
         end
     end
     
-    % progress
+    % Current progress
     if mod( e, 10) == 0
     
         disp(e);
@@ -172,11 +186,12 @@ for e = 1:epochs
     end
 end
 
+% Print all statistics
 figure(1)
 plot(result)
 xlabel('epoch');
 ylabel('Mean Square Error');
 title('Train set performance');
 
-
+% Run our neural network on the test
 test;

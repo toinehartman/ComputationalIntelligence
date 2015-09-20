@@ -74,7 +74,7 @@ targets_calc = zeros(size(targets_validate, 1), 1);
     end
 
      %fprintf('Epoch %d - ', e);
-%     count = 0;
+     count = 0;
 %     for i = 1:size(targets_ind, 1)
 %         if targets_ind(i, 1) == targets_calc(i, 1)
 %             count = count + 1;

@@ -1,5 +1,7 @@
+% Save the log file to a variable
 log_file = fopen('train_results.txt', 'w');
 
+% Print all the statistics for all different inputs
 for epochs = 10:8:34
    for hidden_neurons = 7:4:30
       for threshold = 0:0.1:0.7 
