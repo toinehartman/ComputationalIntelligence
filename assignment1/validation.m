@@ -90,11 +90,11 @@ targets_calc = zeros(size(targets_validate, 1), 1);
     MSE_v(e) = MSE_v(e) / 5498;
 
     p = count / size(targets_validate, 2) * 100;
-%     fprintf('%d samples, %d correct (%f%%) MSE_v %f\n', size(targets_train, 2), count, p, MSE_v);
+     fprintf('%d samples, %d correct (%f%%) MSE_v %f\n', size(targets_validate, 2), count, p, MSE_v);
 
     result_v(e) = MSE_v(e);
    
-    %fprintf('Epoch %d - ', MSE_v, '\n');
+    fprintf('Epoch %d - ', MSE_v, '\n');
     
 
 
