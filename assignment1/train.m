@@ -3,7 +3,7 @@ clc, clf, close;
 
 %Initialize variables
 inputs = 10;
-epochs = 50;
+epochs = 300;
 hidden_neurons = 12;
 outputs = 7;
 treshold = 0.2;
@@ -41,6 +41,8 @@ targets_ind = targets(1:divider1, 1:end);
 %Initialize weights
 weights_input_hidden = rand(hidden_neurons, inputs);
 weights_hidden_output = rand(outputs, hidden_neurons);
+weights_input_hidden_epoch = zeros(hidden_neurons, inputs, epochs);
+weights_hidden_output_epoch = zeros(outputs, hidden_neurons, epochs);
 hidden_layer = zeros(hidden_neurons, 1);
 output_layer = zeros(outputs, 1);
 
@@ -144,6 +146,27 @@ for e = 1:epochs
 %     fprintf('%d samples, %d correct (%f%%) MSE %f\n', size(targets_train, 2), count, p, MSE);
 
     result(e) = MSE;
+    
+    % keep track of al the last weights
+    weights_hidden_output_epoch(:,:,e) = weights_hidden_output;
+    weights_input_hidden_epoch(:,:,e) = weights_input_hidden;
+    
+    
+    validation;
+    
+    if e > 1
+        if MSE_v(e) > MSE_v(e-1)
+            weights_hidden_output =  weights_hidden_output_epoch(:,:,e-1);
+            weights_input_hidden = weights_input_hidden_epoch(:,:,e-1);
+            %break;
+        end
+    end
+    
+    if mod( e, 10) == 0
+    
+        disp(e);
+        
+    end
 end
 
 figure(1)
