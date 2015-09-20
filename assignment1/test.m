@@ -14,4 +14,4 @@ for i = 1:size(output, 2)
 end
 
 percentage = count / size(targets_test, 2) * 100;
-fprintf('%d samples, %d correct (%f%%)\n', size(output, 2), count, percentage);
+fprintf('%f%%\n', percentage);
