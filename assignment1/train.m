@@ -160,7 +160,7 @@ for e = 1:epochs
         if MSE_v(e) > MSE_v(e-1)
             weights_hidden_output =  weights_hidden_output_epoch(:,:,e-1);
             weights_input_hidden = weights_input_hidden_epoch(:,:,e-1);
-            %break;
+            break;
         end
     end
     
@@ -176,7 +176,7 @@ figure(1)
 plot(result)
 xlabel('epoch');
 ylabel('Mean Square Error');
-title('Neural network');
+title('Train set performance');
 
 
 test;

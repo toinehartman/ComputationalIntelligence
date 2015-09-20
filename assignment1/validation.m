@@ -102,4 +102,4 @@ figure(2)
 plot(result_v)
 xlabel('epoch');
 ylabel('Mean Square Error');
-title('Neural network');
+title('Validation set performance');
