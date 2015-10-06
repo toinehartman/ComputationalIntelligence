@@ -1,6 +1,10 @@
 package nl.tudelft.group14.assignment3.model;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * Created by toinehartman on 06/10/15.
@@ -22,5 +26,15 @@ public class Maze {
 
     public void setMatrix(boolean[][] matrix) {
         this.matrix = matrix;
+    }
+
+    public static Maze loadFile(String filename) throws FileNotFoundException {
+        Scanner s = new Scanner(new FileInputStream(filename));
+
+        while (s.hasNextInt()) {
+            System.out.println(s.nextInt());
+        }
+
+        return null;
     }
 }
