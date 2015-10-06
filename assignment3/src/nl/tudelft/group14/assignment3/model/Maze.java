@@ -1,9 +1,7 @@
 package nl.tudelft.group14.assignment3.model;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 /**
@@ -30,11 +28,26 @@ public class Maze {
 
     public static Maze loadFile(String filename) throws FileNotFoundException {
         Scanner s = new Scanner(new FileInputStream(filename));
+        
+        int height = s.nextInt();
+        int width = s.nextInt();
 
-        while (s.hasNextInt()) {
-            System.out.println(s.nextInt());
+        boolean[][] result = new boolean[width][height];
+        
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                int value = s.nextInt();
+                result[j][i] = value == 1 ? true : false;
+            }
         }
-
-        return null;
+        
+        Maze res = new Maze(height, width);
+        res.setMatrix(result);
+        
+        s.close();
+        
+        return res;
     }
 }
