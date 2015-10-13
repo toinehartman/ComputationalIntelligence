@@ -7,6 +7,16 @@ import java.io.FileNotFoundException;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        Maze m = Maze.loadFile("resources/hard maze.txt");
+        int col, row, options;
+        Maze m;
+
+        col = 4;
+        row = 1;
+
+        m = Maze.loadFile("resources/test maze.txt");
+        options = m.numberOfOptions(col, row);
+
+        System.out.println(String.format("Square <%d, %d> has %d options!", col, row, options));
+
     }
 }
