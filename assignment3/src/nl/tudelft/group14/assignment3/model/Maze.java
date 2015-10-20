@@ -44,8 +44,8 @@ public class Maze {
 
         boolean[][] result = new boolean[height][width];
 
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int j = 0; j < height; j++) {
+            for (int i = 0; i < width; i++) {
                 int value = s.nextInt();
                 result[j][i] = (value == 1);
             }
