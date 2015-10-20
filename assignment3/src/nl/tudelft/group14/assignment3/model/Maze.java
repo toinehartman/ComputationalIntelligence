@@ -11,10 +11,15 @@ import java.util.Scanner;
  * @version 1.0
  * @since 06/10/15
  */
-public class Maze extends Matrix {
+public class Maze extends Matrix<Boolean> {
+
+    private Pheromones pheromones;
 
     public Maze(int cols, int rows) {
         super(cols, rows);
+
+        this.setMatrix(new Boolean[rows][cols]);
+        this.pheromones = new Pheromones(cols, rows);
     }
 
     public static Maze loadFile(String filename) throws FileNotFoundException {
@@ -23,19 +28,20 @@ public class Maze extends Matrix {
         int cols = s.nextInt();
         int rows = s.nextInt();
 
-        Maze res = new Maze(cols, rows);
+        Maze maze = new Maze(cols, rows);
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 Coordinates c = new Coordinates(col, row);
                 int value = s.nextInt();
-                res.set((value == 1), c);
+                maze.set((value == 1), c);
+                maze.getPheromones().set((value == 1) ? 1.f : 0.f, c);
             }
         }
 
         s.close();
 
-        return res;
+        return maze;
     }
 
     public int numberOfOptions(Coordinates c) {
@@ -64,5 +70,33 @@ public class Maze extends Matrix {
         }
 
         return numberOfOptions;
+    }
+
+    @Override
+    public String toString() {
+        String s = "";
+
+        for (int row = 0; row < rows(); row++) {
+            for (int col = 0; col < cols(); col++) {
+                Coordinates c = new Coordinates(col, row);
+                s += get(c) ? 1 : 0;
+                s += " ";
+            }
+            s += "\n";
+        }
+
+        return s;
+    }
+
+    public Pheromones getPheromones() {
+        return pheromones;
+    }
+
+    public void setPheromones(Pheromones pheromones) {
+        this.pheromones = pheromones;
+    }
+
+    public void setPheromone(float value, Coordinates c) {
+        this.pheromones.set(value, c);
     }
 }
