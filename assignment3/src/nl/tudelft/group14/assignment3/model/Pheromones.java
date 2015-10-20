@@ -9,8 +9,6 @@ package nl.tudelft.group14.assignment3.model;
  */
 public class Pheromones extends Matrix<Float> {
     public Pheromones(int cols, int rows) {
-        super(cols, rows);
-
         this.setMatrix(new Float[rows][cols]);
     }
 }

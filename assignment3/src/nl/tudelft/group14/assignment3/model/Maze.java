@@ -16,8 +16,6 @@ public class Maze extends Matrix<Boolean> {
     private Pheromones pheromones;
 
     public Maze(int cols, int rows) {
-        super(cols, rows);
-
         this.setMatrix(new Boolean[rows][cols]);
         this.pheromones = new Pheromones(cols, rows);
     }

@@ -7,11 +7,8 @@ package nl.tudelft.group14.assignment3.model;
  * @version 1.0
  * @since 20/10/15
  */
-public class Matrix<T> {
+public abstract class Matrix<T> {
     private T[][] matrix;
-
-    public Matrix(int cols, int rows) {
-    }
 
     public int cols() {
         return matrix[0].length;
