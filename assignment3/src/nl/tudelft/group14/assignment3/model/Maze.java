@@ -13,11 +13,17 @@ import java.util.Scanner;
  */
 public class Maze {
     private boolean[][] matrix;
-    public int rows = 0;
-    public int cols = 0;
 
     public Maze(int cols, int rows) {
-        this.matrix = new boolean[cols][rows];
+        this.matrix = new boolean[rows][cols];
+    }
+
+    public int cols() {
+        return matrix[0].length;
+    }
+
+    public int rows() {
+        return matrix.length;
     }
 
     public boolean[][] getMatrix() {
@@ -83,5 +89,20 @@ public class Maze {
         }
 
         return numberOfOptions;
+    }
+
+    @Override
+    public String toString() {
+        String s = "";
+
+        for (int row = 0; row < rows(); row++) {
+            for (int col = 0; col < cols(); col++) {
+                s += get(col, row) ? 1 : 0;
+                s += " ";
+            }
+            s += "\n";
+        }
+
+        return s;
     }
 }
