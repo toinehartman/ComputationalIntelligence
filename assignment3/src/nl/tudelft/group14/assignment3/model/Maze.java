@@ -2,6 +2,7 @@ package nl.tudelft.group14.assignment3.model;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -11,29 +12,10 @@ import java.util.Scanner;
  * @version 1.0
  * @since 06/10/15
  */
-public class Maze {
-    private boolean[][] matrix;
+public class Maze extends Matrix {
 
     public Maze(int cols, int rows) {
-        this.matrix = new boolean[rows][cols];
-    }
-
-    public int cols() {
-        return matrix[0].length;
-    }
-
-    public int rows() {
-        return matrix.length;
-    }
-
-    public boolean[][] getMatrix() {
-        return matrix;
-    }
-
-    public void setMatrix(boolean[][] matrix) {
-        this.matrix = matrix;
-        System.out.println(String.format("%d %d", matrix[0].length, matrix.length));
-        System.out.println(String.format("%d %d", this.cols(), this.rows()));
+        super(cols, rows);
     }
 
     public static Maze loadFile(String filename) throws FileNotFoundException {
@@ -59,19 +41,11 @@ public class Maze {
         return res;
     }
 
-    public boolean get(int col, int row) {
-        return matrix[row][col];
-    }
-
-    public void set(boolean value, int col, int row) {
-        matrix[row][col] = value;
-    }
-
     public int numberOfOptions(int col, int row) {
         int[][] range = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         int numberOfOptions = 0;
 
-        if (col < 0 || row < 0 || col >= this.matrix[0].length || row >= this.matrix.length)
+        if (col < 0 || row < 0 || col >= this.cols() || row >= this.rows())
             throw new IllegalArgumentException("Indices outside maze area are not allowed");
 
         for (int[] c : range) {
@@ -91,20 +65,5 @@ public class Maze {
         }
 
         return numberOfOptions;
-    }
-
-    @Override
-    public String toString() {
-        String s = "";
-
-        for (int row = 0; row < rows(); row++) {
-            for (int col = 0; col < cols(); col++) {
-                s += get(col, row) ? 1 : 0;
-                s += " ";
-            }
-            s += "\n";
-        }
-
-        return s;
     }
 }
