@@ -2,7 +2,6 @@ package nl.tudelft.group14.assignment3.model;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -21,40 +20,40 @@ public class Maze extends Matrix {
     public static Maze loadFile(String filename) throws FileNotFoundException {
         Scanner s = new Scanner(new FileInputStream(filename));
 
-        int width = s.nextInt();
-        int height = s.nextInt();
+        int cols = s.nextInt();
+        int rows = s.nextInt();
 
-        boolean[][] result = new boolean[height][width];
+        Maze res = new Maze(cols, rows);
 
-        for (int j = 0; j < height; j++) {
-            for (int i = 0; i < width; i++) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                Coordinates c = new Coordinates(col, row);
                 int value = s.nextInt();
-                result[j][i] = (value == 1);
+                res.set((value == 1), c);
             }
         }
-
-        Maze res = new Maze(width, height);
-        res.setMatrix(result);
 
         s.close();
 
         return res;
     }
 
-    public int numberOfOptions(int col, int row) {
-        int[][] range = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    public int numberOfOptions(Coordinates c) {
+        Coordinates[] range = {new Coordinates(-1, 0),
+                new Coordinates(1, 0),
+                new Coordinates(0, -1),
+                new Coordinates(0, 1)};
         int numberOfOptions = 0;
 
-        if (col < 0 || row < 0 || col >= this.cols() || row >= this.rows())
+        if (c.getCol() < 0 || c.getRow() < 0 || c.getCol() >= this.cols() || c.getRow() >= this.rows())
             throw new IllegalArgumentException("Indices outside maze area are not allowed");
 
-        for (int[] c : range) {
-            int neighbour_col = col + c[0];
-            int neighbour_row = row + c[1];
+        for (Coordinates r : range) {
+            Coordinates neighbour = c.add(r);
 
-            if (neighbour_col >= 0 && neighbour_col < cols() &&
-                    neighbour_row >= 0 && neighbour_row < rows()) {
-                if (get(neighbour_col, neighbour_row)) {
+            if (neighbour.getCol() >= 0 && neighbour.getCol() < cols() &&
+                    neighbour.getRow() >= 0 && neighbour.getRow() < rows()) {
+                if (get(neighbour)) {
                     // This square is accessible!
                     // TODO: save and return the location...
                     numberOfOptions++;

@@ -30,12 +30,12 @@ public class Matrix {
         this.matrix = matrix;
     }
 
-    public boolean get(int col, int row) {
-        return matrix[row][col];
+    public boolean get(Coordinates c) {
+        return matrix[c.getRow()][c.getCol()];
     }
 
-    public void set(boolean value, int col, int row) {
-        matrix[row][col] = value;
+    public void set(boolean value, Coordinates c) {
+        matrix[c.getRow()][c.getCol()] = value;
     }
 
     @Override
@@ -44,7 +44,8 @@ public class Matrix {
 
         for (int row = 0; row < rows(); row++) {
             for (int col = 0; col < cols(); col++) {
-                s += get(col, row) ? 1 : 0;
+                Coordinates c = new Coordinates(col, row);
+                s += get(c) ? 1 : 0;
                 s += " ";
             }
             s += "\n";
