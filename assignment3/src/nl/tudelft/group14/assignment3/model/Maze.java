@@ -32,52 +32,54 @@ public class Maze {
 
     public void setMatrix(boolean[][] matrix) {
         this.matrix = matrix;
+        System.out.println(String.format("%d %d", matrix[0].length, matrix.length));
+        System.out.println(String.format("%d %d", this.cols(), this.rows()));
     }
 
     public static Maze loadFile(String filename) throws FileNotFoundException {
         Scanner s = new Scanner(new FileInputStream(filename));
-        
-        int height = s.nextInt();
+
         int width = s.nextInt();
+        int height = s.nextInt();
 
         boolean[][] result = new boolean[height][width];
-        
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 int value = s.nextInt();
-                result[j][i] = (value == 1 ? true : false);
+                result[j][i] = (value == 1);
             }
         }
-        
-        Maze res = new Maze(height, width);
+
+        Maze res = new Maze(width, height);
         res.setMatrix(result);
-        res.rows = height;
-        res.cols = width;
-        
+
         s.close();
-        
+
         return res;
     }
 
     public boolean get(int col, int row) {
-        return matrix[col][row];
+        return matrix[row][col];
+    }
+
+    public void set(boolean value, int col, int row) {
+        matrix[row][col] = value;
     }
 
     public int numberOfOptions(int col, int row) {
         int[][] range = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         int numberOfOptions = 0;
 
-        if (col < 0 || row < 0 || col >= this.matrix.length || row >= this.matrix[0].length)
+        if (col < 0 || row < 0 || col >= this.matrix[0].length || row >= this.matrix.length)
             throw new IllegalArgumentException("Indices outside maze area are not allowed");
 
         for (int[] c : range) {
             int neighbour_col = col + c[0];
             int neighbour_row = row + c[1];
 
-            if (neighbour_col >= 0 && neighbour_col < this.matrix.length &&
-                    neighbour_row >= 0 && neighbour_row < this.matrix[0].length) {
+            if (neighbour_col >= 0 && neighbour_col < cols() &&
+                    neighbour_row >= 0 && neighbour_row < rows()) {
                 if (get(neighbour_col, neighbour_row)) {
                     // This square is accessible!
                     // TODO: save and return the location...

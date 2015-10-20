@@ -7,16 +7,14 @@ import java.io.FileNotFoundException;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        int col, row, options;
         Maze m;
 
-        col = 4;
-        row = 1;
+        System.out.println("Loading matrix from file...");
+        m = Maze.loadFile("resources/easy maze.txt");
 
-        m = Maze.loadFile("resources/test maze.txt");
-        options = m.numberOfOptions(col, row);
+        System.out.println(String.format("Matrix has %d cols, %d rows", m.cols(), m.rows()));
 
-        System.out.println(String.format("Square <%d, %d> has %d options!", col, row, options));
-
+        System.out.println("Finished!");
+        System.out.print(m);
     }
 }
