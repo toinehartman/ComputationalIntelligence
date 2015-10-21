@@ -32,7 +32,7 @@ public class Ant {
     public void move() {
     	Block currentBlock = matrix[0][0];
     	visited.add(currentBlock);
-    	while ((currentBlock.getX() != maze.getCols() - 1) && (currentBlock.getY() != maze.getRows() - 1)) {
+    	while ((x != maze.getCols() - 1) || (y != maze.getRows() - 1)) {
 	        ArrayList<Block> currentNeighbours = maze.getNeighbours(currentBlock);
 	        ArrayList<Block> temp = cloneNeighbours(currentNeighbours);
 	        int size = currentNeighbours.size();
