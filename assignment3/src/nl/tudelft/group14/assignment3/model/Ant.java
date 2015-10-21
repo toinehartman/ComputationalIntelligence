@@ -1,69 +1,75 @@
 package nl.tudelft.group14.assignment3.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 public class Ant {
 
     private int x = 0;
     private int y = 0;
+    private Block currentBlock;
     private Stack<Block> route;
+    private Set<Block> pheromoneroute;
     private Maze maze;
     private Block[][] matrix;
     private ArrayList<Block> visited;
+    private boolean finished;
     
-    public Ant (int x, int y, Maze maze)
-    {
-    	this.x = x;
-    	this.y = y;
-    	this.maze = maze;
-    	route = new Stack<Block>();
-    	visited = new ArrayList<Block>();
-    	matrix = Maze.getMatrix();
+    public Stack<Block> getRoute() {
+		return route;
+	}
+
+	public void setRoute(Stack<Block> route) {
+		this.route = route;
+	}
+
+	public Ant (int x, int y, Maze maze) {
+		this.x = x;
+		this.y = y;
+		this.maze = maze;
+		route = new Stack<Block>();
+		pheromoneroute = new HashSet<Block>();
+		visited = new ArrayList<Block>();
+		matrix = Maze.getMatrix();
+		finished = false;
+		currentBlock = matrix[0][0];
+	}
+    
+    public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	public void move() {
+		if (!finished) {
+	    	List<Block> currentNeighbours = maze.getNeighbours(currentBlock);
+	    	currentBlock = decideDirection(currentNeighbours);
+	    	setX(currentBlock.getX());
+	    	setY(currentBlock.getY());
+	    	route.push(currentBlock);
+	    	pheromoneroute.add(currentBlock);
+	    	if (x == 24 && y == 14) {
+	    		finished = true;
+//	    		System.out.println(route.toString());
+	    	}
+		}
     }
     
-    public ArrayList<Block> cloneNeighbours(ArrayList<Block> neighbours) {
-    	ArrayList<Block> result = new ArrayList<Block>();
-    	for (Block b : neighbours)
-    		result.add(b);
-    	return result;
-    }
-    
-    public void move() {
-    	Block currentBlock = matrix[0][0];
-    	visited.add(currentBlock);
-    	while ((x != maze.getCols() - 1) || (y != maze.getRows() - 1)) {
-	        ArrayList<Block> currentNeighbours = maze.getNeighbours(currentBlock);
-	        ArrayList<Block> temp = cloneNeighbours(currentNeighbours);
-	        int size = currentNeighbours.size();
-	        for (int i = 0; i < size; i++) {
-	        	if (visited.contains(temp.get(i)))
-	        		currentNeighbours.remove(temp.get(i));
-	        }
-	        
-	        if (currentNeighbours.size() > 0) {
-		        currentBlock = decideDirection(currentNeighbours);
-		        route.push(currentBlock);
-		        if(!visited.contains(currentBlock))
-		        	visited.add(currentBlock);
-		        this.setX(currentBlock.getX());
-		        this.setY(currentBlock.getY());
-	        } else {
-	        	currentBlock = route.pop();
-	        	this.setX(currentBlock.getX());
-		        this.setY(currentBlock.getY());
-	        }
-    	}
-    	
-    	float amountPheromone = 100 / route.size();
-    	for (Block b : route) {
-    		Floor f = (Floor)b;
-    		f.setPheromone(f.getPheromone() + amountPheromone);
-    		System.out.println("(" + f.getX() + ", " + f.getY() + ")");
-    	}
-    }
-    
-    public void moveTo(Block block) {
+    public Set<Block> getPheromoneroute() {
+		return pheromoneroute;
+	}
+
+	public void setPheromoneroute(Set<Block> pheromoneroute) {
+		this.pheromoneroute = pheromoneroute;
+	}
+
+	public void moveTo(Block block) {
     	setX(block.getX());
     	setY(block.getY());
     }
@@ -76,19 +82,28 @@ public class Ant {
 		this.y = y;
 	}
 
-	public Floor decideDirection(ArrayList<Block> neighbours) {
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public Floor decideDirection(List<Block> neighbours) {
     	float totalPheromone = 0;
-    	
+    	    	
     	for (Block b : neighbours) {
     		Floor f = (Floor)b;
         	totalPheromone += f.getPheromone();
         }
     	
-    	float random = (float)Math.random() * 100;
+    	float random = (float)(Math.random());
     	
     	for (Block b : neighbours) {
     		Floor f = (Floor)b;
-    		float percentage = (f.getPheromone() / totalPheromone) * 100;
+    		float percentage = (f.getPheromone() / totalPheromone);
+//    		System.out.println(random + " - " + percentage);
     		if ((random -= percentage) < 0) return f;
     	}	
     	

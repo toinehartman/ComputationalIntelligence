@@ -1,9 +1,16 @@
 package nl.tudelft.group14.assignment3.model;
 
+import java.awt.Point;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.Stack;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by toinehartman on 06/10/15.
@@ -15,9 +22,15 @@ import java.util.Scanner;
 public class Maze {
 
 	private static Block[][] matrix;
+	private final float pheromone = 10000f;
+	private final float evaporate = 0.1f;
+	private Map<Stack<Block>, Float> pheromoneQueue; 
+	public List<Point> wallPoints = new ArrayList<>();
+	public List<Point> floorPoints = new ArrayList<>();
 	
     public Maze(int cols, int rows) {
         matrix = new Block[cols][rows];
+        pheromoneQueue = new HashMap<Stack<Block>, Float>();
     }
 
     public static Maze loadFile(String filename) throws FileNotFoundException {
@@ -32,8 +45,10 @@ public class Maze {
             for (int col = 0; col < cols; col++) {
             	int value = s.nextInt();
             	if (value == 1) {
+            		maze.floorPoints.add(new Point(col, row));
             		matrix[col][row] = new Floor(col, row, 1);
             	} else {
+            		maze.wallPoints.add(new Point(col, row));
             		matrix[col][row] = new Wall(col, row);
             	}
             }
@@ -96,7 +111,7 @@ public class Maze {
     	return result;
     }
     
-    public ArrayList<Block> getNeighbours(Block block) {
+    public List<Block> getNeighbours(Block block) {
     	ArrayList<Block> neighbours = new ArrayList<Block>();
     	if (getRight(block) != null)
     		neighbours.add(getRight(block));
@@ -107,18 +122,20 @@ public class Maze {
     	if (getDown(block) != null)	
     		neighbours.add(getDown(block));
     	
-    	return neighbours;
+    	return new CopyOnWriteArrayList<Block>(neighbours);
     }
     
-    public String toString() {
+    public String toStringAnt(Ant ant) {
         String s = "";
 
         for (int row = 0; row < getRows(); row++) {
             for (int col = 0; col < getCols(); col++) {
-                if (matrix[col][row] instanceof Wall)
-                	s += "Wall ";
-                else
-                	s += "Floor ";
+                if (col == ant.getX() && row == ant.getY())
+                	s += "A";
+                else if (matrix[col][row] instanceof Wall)
+                	s += "0";
+                else if (matrix[col][row] instanceof Floor)
+                	s += "x";
             }
             s += "\n";
         }
@@ -126,6 +143,30 @@ public class Maze {
         return s;
     }
 
+    public void addPheromone(Stack<Block> route, Set<Block> pheromoneroute) {
+    	float size = (float)route.size();
+    	float pheromoneAmount = pheromone / size;
+    	pheromoneQueue.put(route, pheromoneAmount);
+    }
+    
+    public void applyPheromone() {
+    	evaporate();
+    	for(Map.Entry<Stack<Block>, Float> blockFloatEntry : pheromoneQueue.entrySet()) {
+    		for(Block block : blockFloatEntry.getKey()) {
+    			Floor floor = (Floor) block;
+    			floor.setPheromone(floor.getPheromone() + blockFloatEntry.getValue());
+    		}
+    	}
+    	pheromoneQueue.clear();
+    }
+    
+    public void evaporate() {
+    	for (Point p : floorPoints) {
+    		Floor f = (Floor)matrix[p.x][p.y];
+    		f.setPheromone(f.getPheromone() * (1f - evaporate));
+    	}
+    }
+    
 	public static Block[][] getMatrix() {
 		return matrix;
 	}
