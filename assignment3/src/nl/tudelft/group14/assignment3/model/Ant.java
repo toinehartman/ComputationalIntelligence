@@ -30,16 +30,18 @@ public class Ant {
     }
     
     public void move() {
-    	Block currentBlock = matrix[x][y];
-    	while (currentBlock.getX() != maze.getCols() && currentBlock.getY() != maze.getRows()) {
+    	Block currentBlock = matrix[0][0];
+    	visited.add(currentBlock);
+    	while ((currentBlock.getX() != maze.getCols() - 1) && (currentBlock.getY() != maze.getRows() - 1)) {
 	        ArrayList<Block> currentNeighbours = maze.getNeighbours(currentBlock);
 	        ArrayList<Block> temp = cloneNeighbours(currentNeighbours);
-//	        for (Block b : temp) {
-//	        	if (visited.contains(b))
-//	        		currentNeighbours.remove(b);
-//	        }
+	        int size = currentNeighbours.size();
+	        for (int i = 0; i < size; i++) {
+	        	if (visited.contains(temp.get(i)))
+	        		currentNeighbours.remove(temp.get(i));
+	        }
 	        
-	        if (currentNeighbours.size() > 1) {
+	        if (currentNeighbours.size() > 0) {
 		        currentBlock = decideDirection(currentNeighbours);
 		        route.push(currentBlock);
 		        if(!visited.contains(currentBlock))
@@ -48,6 +50,8 @@ public class Ant {
 		        this.setY(currentBlock.getY());
 	        } else {
 	        	currentBlock = route.pop();
+	        	this.setX(currentBlock.getX());
+		        this.setY(currentBlock.getY());
 	        }
     	}
     	
