@@ -2,6 +2,7 @@ package nl.tudelft.group14.assignment3.model;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -11,13 +12,12 @@ import java.util.Scanner;
  * @version 1.0
  * @since 06/10/15
  */
-public class Maze extends Matrix<Boolean> {
+public class Maze {
 
-    private Pheromones pheromones;
-
+	private static Block[][] matrix;
+	
     public Maze(int cols, int rows) {
-        this.setMatrix(new Boolean[rows][cols]);
-        this.pheromones = new Pheromones(cols, rows);
+        matrix = new Block[cols][rows];
     }
 
     public static Maze loadFile(String filename) throws FileNotFoundException {
@@ -30,10 +30,12 @@ public class Maze extends Matrix<Boolean> {
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                Coordinates c = new Coordinates(col, row);
-                int value = s.nextInt();
-                maze.set((value == 1), c);
-                maze.getPheromones().set((value == 1) ? 1.f : 0.f, c);
+            	int value = s.nextInt();
+            	if (value == 1) {
+            		matrix[col][row] = new Floor(col, row, 1);
+            	} else {
+            		matrix[col][row] = new Wall(col, row);
+            	}
             }
         }
 
@@ -41,44 +43,82 @@ public class Maze extends Matrix<Boolean> {
 
         return maze;
     }
-
-    public int numberOfOptions(Coordinates c) {
-        Coordinates[] range = {new Coordinates(-1, 0),
-                new Coordinates(1, 0),
-                new Coordinates(0, -1),
-                new Coordinates(0, 1)};
-        int numberOfOptions = 0;
-
-        if (c.getCol() < 0 || c.getRow() < 0 || c.getCol() >= this.cols() || c.getRow() >= this.rows())
-            throw new IllegalArgumentException("Indices outside maze area are not allowed");
-
-        for (Coordinates r : range) {
-            Coordinates neighbour = c.add(r);
-
-            if (neighbour.getCol() >= 0 && neighbour.getCol() < cols() &&
-                    neighbour.getRow() >= 0 && neighbour.getRow() < rows()) {
-                if (get(neighbour)) {
-                    // This square is accessible!
-                    // TODO: save and return the location...
-                    numberOfOptions++;
-                }
-            } else {
-                // This square is outside the borders of the maze
-            }
-        }
-
-        return numberOfOptions;
+    
+    public int getCols() {
+    	return matrix.length;
     }
-
-    @Override
+    
+    public int getRows() {
+    	return matrix[0].length;
+    }
+    
+    public Block getRight(Block block) {
+    	int x = block.getX();
+    	int y = block.getY();
+    	Block result = null;
+    	if (x < getCols() - 1) {
+    		if (matrix[x + 1][y] instanceof Floor)
+    			result = matrix[x + 1][y];
+    	}
+    	return result;
+    }
+    
+    public Block getLeft(Block block) {
+    	int x = block.getX();
+    	int y = block.getY();
+    	Block result = null;
+    	if (x > 0) {
+    		if (matrix[x - 1][y] instanceof Floor)
+    			result = matrix[x - 1][y];
+    	}
+    	return result;
+    }
+    
+    public Block getUp(Block block) {
+    	int x = block.getX();
+    	int y = block.getY();
+    	Block result = null;
+    	if (y > 0) {
+    		if (matrix[x][y - 1] instanceof Floor)
+    			result = matrix[x][y - 1];
+    	}
+    	return result;
+    }
+    
+    public Block getDown(Block block) {
+    	int x = block.getX();
+    	int y = block.getY();
+    	Block result = null;
+    	if (y < getRows() - 1) {
+    		if (matrix[x][y + 1] instanceof Floor)
+    			result = matrix[x][y + 1];
+    	}
+    	return result;
+    }
+    
+    public ArrayList<Block> getNeighbours(Block block) {
+    	ArrayList<Block> neighbours = new ArrayList<Block>();
+    	if (getRight(block) != null)
+    		neighbours.add(getRight(block));
+    	if (getLeft(block) != null)
+    		neighbours.add(getLeft(block));
+    	if (getUp(block) != null)	
+    		neighbours.add(getUp(block)); 
+    	if (getDown(block) != null)	
+    		neighbours.add(getDown(block));
+    	
+    	return neighbours;
+    }
+    
     public String toString() {
         String s = "";
 
-        for (int row = 0; row < rows(); row++) {
-            for (int col = 0; col < cols(); col++) {
-                Coordinates c = new Coordinates(col, row);
-                s += get(c) ? 1 : 0;
-                s += " ";
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
+                if (matrix[col][row] instanceof Wall)
+                	s += "Wall ";
+                else
+                	s += "Floor ";
             }
             s += "\n";
         }
@@ -86,15 +126,11 @@ public class Maze extends Matrix<Boolean> {
         return s;
     }
 
-    public Pheromones getPheromones() {
-        return pheromones;
-    }
+	public static Block[][] getMatrix() {
+		return matrix;
+	}
 
-    public void setPheromones(Pheromones pheromones) {
-        this.pheromones = pheromones;
-    }
-
-    public void setPheromone(float value, Coordinates c) {
-        this.pheromones.set(value, c);
-    }
+	public static void setMatrix(Block[][] matrix) {
+		Maze.matrix = matrix;
+	}
 }
