@@ -64,7 +64,7 @@ public class Ant {
             route.push(currentBlock);
             visited.add(currentBlock);            
             pheromoneroute.add(currentBlock);
-            if (x == 24 && y == 14) {
+            if (x == maze.getCols() - 1 && y == maze.getRows() - 1) {
                 finished = true;
 //                System.out.println(route.toString());
             }
@@ -142,7 +142,7 @@ public class Ant {
     		Floor f = (Floor)b;
     		float percentage = (f.getPheromone() / totalPheromone);
 //    		System.out.println(random + " - " + percentage + "  "  + (random < percentage) + " -  x:" + f.getX() + " y:" + f.getY());
-    		if ((random -= percentage) < 0) return f;
+    		if ((random -= percentage) < 0 || neighbours.indexOf(b) == neighbours.size() - 1) return f;
     	}	
     	
     	return null;

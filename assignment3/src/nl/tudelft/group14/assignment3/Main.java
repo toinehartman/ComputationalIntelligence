@@ -18,5 +18,8 @@ public class Main {
         	Iteration i = new Iteration(1);
         	i.iterate(m);
         }
+
+        System.out.println(Iteration.shortest_route);
+        System.exit(0);
     }
 }

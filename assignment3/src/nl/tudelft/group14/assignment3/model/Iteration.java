@@ -3,8 +3,11 @@ package nl.tudelft.group14.assignment3.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 public class Iteration {
+
+	public static Stack<Block> shortest_route;
 
     private int antAmount;
     ArrayList<Set<Block>> routes;
@@ -36,7 +39,10 @@ public class Iteration {
     	}
     	
     	for (Ant a : ants) {
-			System.out.println(a.getRoute().size());
+            if (shortest_route == null || a.getRoute().size() < shortest_route.size()) {
+//                System.out.println(a.getRoute().size());
+                shortest_route = a.getRoute();
+            }
 			maze.applyPheromone(a);	
 		}
     	//maze.applyPheromone();	
