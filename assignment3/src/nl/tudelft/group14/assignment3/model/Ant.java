@@ -46,21 +46,46 @@ public class Ant {
 		this.finished = finished;
 	}
 
-	public void move() {
-		if (!finished) {	
-			List<Block> currentNeighbours = getNeighbours();
-			currentBlock = decideDirection(currentNeighbours);		
-	    	setX(currentBlock.getX());
-	    	setY(currentBlock.getY());
-	    	route.push(currentBlock);
-	    	visited.add(currentBlock);	    	
-	    	pheromoneroute.add(currentBlock);
-	    	if (x == 24 && y == 14) {
-	    		finished = true;
-//	    		System.out.println(route.toString());
-	    	}
-		}
+	public List<Block> cloneNeighbours(List<Block> neighbours) {
+        List<Block> result = new ArrayList<Block>();
+        for (Block b : neighbours)
+            result.add(b);
+        return result;
     }
+	
+	public void move() {
+        Block currentBlock = matrix[0][0];
+        visited.add(currentBlock);
+        while (x != 24 || y != 14) {
+            List<Block> currentNeighbours = maze.getNeighbours(currentBlock);
+            List<Block> temp = cloneNeighbours(currentNeighbours);
+            int size = temp.size();
+
+            for (int i = 0; i < size; i++) {
+                if (visited.contains(temp.get(i)))
+                    currentNeighbours.remove(temp.get(i));
+            }
+            System.out.println(currentNeighbours.size());            
+            System.out.println(getX() + " - " + getY());
+            
+            if (currentNeighbours.size() > 0) {
+                if (route.isEmpty()) {
+                    visited.clear();
+                    currentNeighbours = maze.getNeighbours(currentBlock);
+                }
+                currentBlock = decideDirection(currentNeighbours);
+                route.push(currentBlock);
+                if(!visited.contains(currentBlock))
+                    visited.add(currentBlock);
+                this.setX(currentBlock.getX());
+                this.setY(currentBlock.getY());
+            } else {
+                currentBlock = route.pop();
+                this.setX(currentBlock.getX());
+                this.setY(currentBlock.getY());
+            }
+        }
+	}
     
 	public List<Block> getNeighbours(){
 		List<Block> currentNeighbours = maze.getNeighbours(currentBlock);
