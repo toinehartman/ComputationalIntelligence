@@ -47,12 +47,13 @@ public class Ant {
 	}
 
 	public void move() {
-		if (!finished) {
-	    	List<Block> currentNeighbours = maze.getNeighbours(currentBlock);
-	    	currentBlock = decideDirection(currentNeighbours);
+		if (!finished) {	
+			List<Block> currentNeighbours = getNeighbours();
+			currentBlock = decideDirection(currentNeighbours);		
 	    	setX(currentBlock.getX());
 	    	setY(currentBlock.getY());
 	    	route.push(currentBlock);
+	    	visited.add(currentBlock);	    	
 	    	pheromoneroute.add(currentBlock);
 	    	if (x == 24 && y == 14) {
 	    		finished = true;
@@ -61,6 +62,23 @@ public class Ant {
 		}
     }
     
+	public List<Block> getNeighbours(){
+		List<Block> currentNeighbours = maze.getNeighbours(currentBlock);
+		
+		for (Block b : currentNeighbours){			
+			if (visited.size()>1){
+//				System.out.println(b.toString() + "  -  " + visited.get(visited.size()-1));
+				if (b.equals(visited.get(visited.size()-2))){
+//					System.out.println(b.toString());
+					currentNeighbours.remove(b);
+				}
+			}
+		}
+		
+		return currentNeighbours;
+		
+	}
+	
     public Set<Block> getPheromoneroute() {
 		return pheromoneroute;
 	}
@@ -103,7 +121,7 @@ public class Ant {
     	for (Block b : neighbours) {
     		Floor f = (Floor)b;
     		float percentage = (f.getPheromone() / totalPheromone);
-//    		System.out.println(random + " - " + percentage);
+//    		System.out.println(random + " - " + percentage + "  "  + (random < percentage) + " -  x:" + f.getX() + " y:" + f.getY());
     		if ((random -= percentage) < 0) return f;
     	}	
     	
