@@ -14,9 +14,12 @@ public class Main {
         System.out.println("Loading matrix from file...");
         m = Maze.loadFile("medium");
         new VisualizerPheromone("Test", 300, 300, m.getRows(), m.getCols(), m).setVisible(true);
-        for (int a = 0; a < 10000; a++) {
+        System.out.println("Calculating route...");
+        int max_iterations = 10000;
+        for (int a = 0; a < max_iterations; a++) {
         	Iteration i = new Iteration(1);
         	i.iterate(m);
+            if (a % (max_iterations / 100) == 0) System.out.println((float) a / max_iterations * 100 + "%");
         }
 
         System.out.println(String.format("%d %s", Iteration.shortest_route.size(), Iteration.shortest_route.toString()));
