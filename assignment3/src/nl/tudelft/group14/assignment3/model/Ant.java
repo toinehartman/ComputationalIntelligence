@@ -18,6 +18,7 @@ public class Ant {
 	private ArrayList<Block> visited;
 	private boolean finished;
 	private float pheromone;
+	private String routeDirections;
 
 	private int[] start;
 	private int[] end;
@@ -41,6 +42,7 @@ public class Ant {
 		finished = false;
 		currentBlock = matrix[start[0]][start[1]];
 		this.pheromone = pheromone;
+		routeDirections = maze.getStart()[0] + ", " + maze.getStart()[1] + ";\n";
 
 		this.start = start;
 		this.end = end;
@@ -72,18 +74,37 @@ public class Ant {
 			}
 			setX(currentBlock.getX());
 			setY(currentBlock.getY());
+			if (oldCurrBlock.getX() > currentBlock.getX())
+			    routeDirections += "2;";
+			else if (oldCurrBlock.getX() < currentBlock.getX())
+			    routeDirections += "0;";
+			else if (oldCurrBlock.getY() > currentBlock.getY())
+			    routeDirections += "1;";
+			else if (oldCurrBlock.getY() < currentBlock.getY())
+			    routeDirections += "3;";
+			
 			route.push(currentBlock);
 			visited.add(currentBlock);            
 			pheromoneroute.add(currentBlock);
 			if (x == this.end[0] && y == this.end[1]) {
 				finished = true;
+				routeDirections = route.size() + ";\n" + routeDirections;
+//				System.out.println(routeDirections);
 				//                System.out.println(route.toString());
 			}
 		}
 	}
 
 
-	public List<Block> getNeighbours(Block currentBlock){
+	public String getRouteDirections() {
+        return routeDirections;
+    }
+
+    public void setRouteDirections(String routeDirections) {
+        this.routeDirections = routeDirections;
+    }
+
+    public List<Block> getNeighbours(Block currentBlock){
 		List<Block> currentNeighbours = maze.getNeighbours(currentBlock);
 
 		if (currentNeighbours.size() > 1){
@@ -146,6 +167,9 @@ public class Ant {
 
 		for (Block b : neighbours) {
 			Floor f = (Floor)b;
+			if (neighbours.size() == 3) {
+			    
+			}
 			totalPheromone += f.getPheromone();
 		}
 

@@ -8,6 +8,7 @@ import java.util.Stack;
 public class Iteration {
 
 	public static Stack<Block> shortest_route;
+	public static String shortest_directions;
 
     private int antAmount;
     ArrayList<Set<Block>> routes;
@@ -35,6 +36,7 @@ public class Iteration {
     	while (!isAllFinished()) {
     		for (Ant a : ants) {
 				a.move();
+//				System.out.println(maze.toStringAnt(a));
 			}
     	}
     	
@@ -42,6 +44,7 @@ public class Iteration {
             if (shortest_route == null || a.getRoute().size() < shortest_route.size()) {
 //                System.out.println(a.getRoute().size());
                 shortest_route = a.getRoute();
+                shortest_directions = a.getRouteDirections();
             }
 			maze.applyPheromone(a);	
 		}
