@@ -62,9 +62,14 @@ public class Ant {
     }
 	
     public void move() {
-        if (!finished) {    
+        if (!finished) {
+            Block oldCurrBlock = currentBlock;
             List<Block> currentNeighbours = getNeighbours(currentBlock);
             currentBlock = decideDirection(currentNeighbours);
+            if (currentBlock == null) {
+                System.out.println(String.format("%s, %s", currentNeighbours.toString(), oldCurrBlock.toString()));
+                System.exit(0);
+            }
             setX(currentBlock.getX());
             setY(currentBlock.getY());
             route.push(currentBlock);
@@ -150,8 +155,6 @@ public class Ant {
 //    		System.out.println(random + " - " + percentage + "  "  + (random < percentage) + " -  x:" + f.getX() + " y:" + f.getY() + " size: " + neighbours.size());
     		if ((random -= percentage) < 0 || neighbours.indexOf(b) == neighbours.size() - 1) return f;
     	}
-
-        System.out.println(neighbours);
 
         return null;
     }

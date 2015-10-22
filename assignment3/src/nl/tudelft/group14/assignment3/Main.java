@@ -12,7 +12,7 @@ public class Main {
         Maze m;
         
         System.out.println("Loading matrix from file...");
-        m = Maze.loadFile("easy");
+        m = Maze.loadFile("medium");
         new VisualizerPheromone("Test", 300, 300, m.getRows(), m.getCols(), m).setVisible(true);
         for (int a = 0; a < 10000; a++) {
         	Iteration i = new Iteration(1);
