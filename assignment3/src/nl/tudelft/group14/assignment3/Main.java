@@ -14,8 +14,8 @@ public class Main {
         System.out.println("Loading matrix from file...");
         m = Maze.loadFile("resources/easy maze.txt");
         new VisualizerPheromone("Test", 300, 300, m.getRows(), m.getCols(), m).setVisible(true);
-        for (int a = 0; a < 1000; a++) {
-        	Iteration i = new Iteration(10);
+        for (int a = 0; a < 10000; a++) {
+        	Iteration i = new Iteration(1);
         	i.iterate(m);
         }
     }

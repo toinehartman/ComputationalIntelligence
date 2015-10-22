@@ -26,7 +26,7 @@ public class Iteration {
     
     public void iterate(Maze maze) {
     	for (int i = 0; i < antAmount; i++) {
-			ants.add(new Ant(0, 0, maze));
+			ants.add(new Ant(0, 0, maze, 1000));
     	}
     	
     	while (!isAllFinished()) {
@@ -37,7 +37,8 @@ public class Iteration {
     	
     	for (Ant a : ants) {
 			System.out.println(a.getRoute().size());
+			maze.applyPheromone(a);	
 		}
-    	maze.applyPheromone();	
+    	//maze.applyPheromone();	
     }    
 }

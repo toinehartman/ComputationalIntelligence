@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Maze {
 
 	private static Block[][] matrix;
-	private final float pheromone = 10000f;
+	private final float pheromone = 100f;
 	private final float evaporate = 0.1f;
 	private Map<Stack<Block>, Float> pheromoneQueue; 
 	public List<Point> wallPoints = new ArrayList<>();
@@ -149,15 +149,20 @@ public class Maze {
     	pheromoneQueue.put(route, pheromoneAmount);
     }
     
-    public void applyPheromone() {
+    public void applyPheromone(Ant a) {
     	evaporate();
-    	for(Map.Entry<Stack<Block>, Float> blockFloatEntry : pheromoneQueue.entrySet()) {
-    		for(Block block : blockFloatEntry.getKey()) {
-    			Floor floor = (Floor) block;
-    			floor.setPheromone(floor.getPheromone() + blockFloatEntry.getValue());
-    		}
+    	
+    	for (int p = 0; p < a.getRoute().size(); p++){
+    		((Floor) a.getRoute().get(p)).setPheromone(a.getPheromonePerBlock());
     	}
-    	pheromoneQueue.clear();
+    	
+//    	for(Map.Entry<Stack<Block>, Float> blockFloatEntry : pheromoneQueue.entrySet()) {
+//    		for(Block block : blockFloatEntry.getKey()) {
+//    			Floor floor = (Floor) block;
+//    			floor.setPheromone(floor.getPheromone() + blockFloatEntry.getValue());
+//    		}
+//    	}
+//    	pheromoneQueue.clear();
     }
     
     public void evaporate() {
