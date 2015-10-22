@@ -1,8 +1,10 @@
 package nl.tudelft.group14.assignment3.model;
 
 import java.awt.Point;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Pattern;
 
 /**
  * Created by toinehartman on 06/10/15.
@@ -27,23 +30,43 @@ public class Maze {
 	private Map<Stack<Block>, Float> pheromoneQueue; 
 	public List<Point> wallPoints = new ArrayList<>();
 	public List<Point> floorPoints = new ArrayList<>();
+
+    private int[] start;
+    private int[] end;
 	
-    public Maze(int cols, int rows) {
+    public Maze(int cols, int rows, int[] start, int[] end) {
         matrix = new Block[cols][rows];
         pheromoneQueue = new HashMap<Stack<Block>, Float>();
+
+        this.start = start;
+        this.end = end;
     }
 
-    public static Maze loadFile(String filename) throws FileNotFoundException {
-        Scanner s = new Scanner(new FileInputStream(filename));
+    public static Maze loadFile(String maze_name) throws FileNotFoundException {
+        String maze_file = "resources/" + maze_name + " maze.txt";
+        String coords_file = "resources/" + maze_name + " coordinates.txt";
 
-        int cols = s.nextInt();
-        int rows = s.nextInt();
+        Scanner coord_scanner = new Scanner(new File(coords_file));
+        coord_scanner.useDelimiter(Pattern.compile(",\\s|;\\s?"));
 
-        Maze maze = new Maze(cols, rows);
+        System.out.println("Reading start and end coordinates...");
+        int[] start = {Integer.parseInt(coord_scanner.next().replace('\n', '\0').trim()),
+                Integer.parseInt(coord_scanner.next().replace('\n', '\0').trim())};
+        int[] end = {Integer.parseInt(coord_scanner.next().replace('\n', '\0').trim()),
+                Integer.parseInt(coord_scanner.next().replace('\n', '\0').trim())};
 
+        Scanner maze_scanner = new Scanner(new File(maze_file));
+
+        System.out.println("Reading maze dimensions...");
+        int cols = maze_scanner.nextInt();
+        int rows = maze_scanner.nextInt();
+
+        Maze maze = new Maze(cols, rows, start, end);
+
+        System.out.println("Reading maze values...");
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-            	int value = s.nextInt();
+            	int value = maze_scanner.nextInt();
             	if (value == 1) {
             		maze.floorPoints.add(new Point(col, row));
             		matrix[col][row] = new Floor(col, row, 1);
@@ -54,7 +77,7 @@ public class Maze {
             }
         }
 
-        s.close();
+        maze_scanner.close();
 
         return maze;
     }
@@ -179,4 +202,12 @@ public class Maze {
 	public static void setMatrix(Block[][] matrix) {
 		Maze.matrix = matrix;
 	}
+
+    public int[] getStart() {
+        return start;
+    }
+
+    public int[] getEnd() {
+        return end;
+    }
 }

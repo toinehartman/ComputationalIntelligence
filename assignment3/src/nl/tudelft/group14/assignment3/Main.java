@@ -12,14 +12,14 @@ public class Main {
         Maze m;
         
         System.out.println("Loading matrix from file...");
-        m = Maze.loadFile("resources/easy maze.txt");
+        m = Maze.loadFile("easy");
         new VisualizerPheromone("Test", 300, 300, m.getRows(), m.getCols(), m).setVisible(true);
         for (int a = 0; a < 10000; a++) {
         	Iteration i = new Iteration(1);
         	i.iterate(m);
         }
 
-        System.out.println(Iteration.shortest_route);
+        System.out.println(String.format("%d %s", Iteration.shortest_route.size(), Iteration.shortest_route.toString()));
         System.exit(0);
     }
 }

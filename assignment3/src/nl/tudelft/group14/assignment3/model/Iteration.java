@@ -29,7 +29,7 @@ public class Iteration {
     
     public void iterate(Maze maze) {
     	for (int i = 0; i < antAmount; i++) {
-			ants.add(new Ant(0, 0, maze, 1000));
+			ants.add(new Ant(0, 0, maze, 1000, maze.getStart(), maze.getEnd()));
     	}
     	
     	while (!isAllFinished()) {

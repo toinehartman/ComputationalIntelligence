@@ -18,6 +18,9 @@ public class Ant {
     private ArrayList<Block> visited;
     private boolean finished;
     private float pheromone;
+
+    private int[] start;
+    private int[] end;
     
     public Stack<Block> getRoute() {
 		return route;
@@ -27,7 +30,7 @@ public class Ant {
 		this.route = route;
 	}
 
-	public Ant (int x, int y, Maze maze, float pheromone) {
+	public Ant (int x, int y, Maze maze, float pheromone, int[] start, int[] end) {
 		this.x = x;
 		this.y = y;
 		this.maze = maze;
@@ -36,8 +39,11 @@ public class Ant {
 		visited = new ArrayList<Block>();
 		matrix = Maze.getMatrix();
 		finished = false;
-		currentBlock = matrix[0][0];
+		currentBlock = matrix[start[0]][start[1]];
 		this.pheromone = pheromone;
+
+        this.start = start;
+        this.end = end;
 	}
     
     public boolean isFinished() {
@@ -58,13 +64,13 @@ public class Ant {
     public void move() {
         if (!finished) {    
             List<Block> currentNeighbours = getNeighbours(currentBlock);
-            currentBlock = decideDirection(currentNeighbours);        
+            currentBlock = decideDirection(currentNeighbours);
             setX(currentBlock.getX());
             setY(currentBlock.getY());
             route.push(currentBlock);
             visited.add(currentBlock);            
             pheromoneroute.add(currentBlock);
-            if (x == maze.getCols() - 1 && y == maze.getRows() - 1) {
+            if (x == this.end[0] && y == this.end[1]) {
                 finished = true;
 //                System.out.println(route.toString());
             }
@@ -141,16 +147,12 @@ public class Ant {
     	for (Block b : neighbours) {
     		Floor f = (Floor)b;
     		float percentage = (f.getPheromone() / totalPheromone);
-//    		System.out.println(random + " - " + percentage + "  "  + (random < percentage) + " -  x:" + f.getX() + " y:" + f.getY());
+//    		System.out.println(random + " - " + percentage + "  "  + (random < percentage) + " -  x:" + f.getX() + " y:" + f.getY() + " size: " + neighbours.size());
     		if ((random -= percentage) < 0 || neighbours.indexOf(b) == neighbours.size() - 1) return f;
-    	}	
-    	
-    	return null;
+    	}
+
+        System.out.println(neighbours);
+
+        return null;
     }
-	
-
-
-	
-	
-	
 }
