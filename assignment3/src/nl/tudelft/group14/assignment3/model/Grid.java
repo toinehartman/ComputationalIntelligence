@@ -67,8 +67,19 @@ public class Grid extends Canvas {
 			g.drawLine(i * rowWidth, 0, i * rowWidth, height);
 		fillWalls(g);
 		fillFloors(g);
+		
+		for (Ant a : Iteration.ants) {
+		    System.out.println("grid: " + a);
+		    fillAnt(a.getX(), a.getY(), g, Color.GREEN);
+		}
 	}
 	
+	
+   public void fillAnt(int row, int column, Graphics g, Color color) {
+        g.setColor(color);
+        g.fillRect(row * rowWidth, column * rowHeight, (int)Math.random()*rowWidth, (int)Math.random()*rowHeight);
+    }
+   
 	public void fillXY(int row, int column, Graphics g, Color color) {
 		g.setColor(color);
 		g.fillRect(row * rowWidth, column * rowHeight, rowWidth, rowHeight);

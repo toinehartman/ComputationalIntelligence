@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import nl.tudelft.group14.assignment3.Main;
+
 public class Iteration {
 
 	public static Stack<Block> shortest_route;
@@ -12,7 +14,7 @@ public class Iteration {
 
     private int antAmount;
     ArrayList<Set<Block>> routes;
-    List<Ant> ants;
+    public static List<Ant> ants;
     
     public Iteration(int antAmount)
     {
@@ -38,6 +40,8 @@ public class Iteration {
 				a.move();
 //				System.out.println(maze.toStringAnt(a));
 			}
+    		Main.grid.repaint();
+//    		Main.grid.xyz.repaint();
     	}
     	
     	for (Ant a : ants) {

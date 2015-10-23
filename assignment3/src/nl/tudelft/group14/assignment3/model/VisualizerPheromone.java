@@ -9,22 +9,20 @@ public class VisualizerPheromone extends Frame {
 	   * Construct a GfxDemo2 given its title, width and height. Uses a
 	   * GridBagLayout to make the Canvas resize properly.
 	   */
+        public Grid xyz;
+    
 	  public VisualizerPheromone(String title, int w, int h, int rows, int cols, Maze m) {
 	    setTitle(title);
 
 	    // Now create a Canvas and add it to the Frame.
-	    Grid xyz = new Grid(w, h, rows, cols, m);
+	    xyz = new Grid(w, h, rows, cols, m);
 	    add(xyz);
-
-	    addWindowListener(new WindowAdapter() {
-	      public void windowClosing(WindowEvent e) {
-	        setVisible(false);
-	        dispose();
-	        System.exit(0);
-	      }
-	    });
 
 	    // Normal end ... pack it up!
 	    pack();
+	  }
+	  
+	  public Grid returnGrid() {
+	      return xyz;
 	  }
 	}

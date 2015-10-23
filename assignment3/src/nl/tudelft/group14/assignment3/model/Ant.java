@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import nl.tudelft.group14.assignment3.Main;
+
 public class Ant {
 
 	private int x = 0;
@@ -19,6 +21,7 @@ public class Ant {
 	private boolean finished;
 	private float pheromone;
 	private String routeDirections;
+	private int lastDirection;
 
 	private int[] start;
 	private int[] end;
@@ -43,6 +46,7 @@ public class Ant {
 		currentBlock = matrix[start[0]][start[1]];
 		this.pheromone = pheromone;
 		routeDirections = maze.getStart()[0] + ", " + maze.getStart()[1] + ";\n";
+		lastDirection = 3;
 
 		this.start = start;
 		this.end = end;
@@ -65,6 +69,8 @@ public class Ant {
 
 	public void move() {
 		if (!finished) {
+		    Main.grid.repaint();
+//		    Main.grid.xyz.repaint();
 			Block oldCurrBlock = currentBlock;
 			List<Block> currentNeighbours = getNeighbours(currentBlock);
 			currentBlock = decideDirection(currentNeighbours);
@@ -74,14 +80,22 @@ public class Ant {
 			}
 			setX(currentBlock.getX());
 			setY(currentBlock.getY());
-			if (oldCurrBlock.getX() > currentBlock.getX())
+			if (oldCurrBlock.getX() > currentBlock.getX()) {
 			    routeDirections += "2;";
-			else if (oldCurrBlock.getX() < currentBlock.getX())
+			    lastDirection = 2;
+			    }
+			else if (oldCurrBlock.getX() < currentBlock.getX()) {
 			    routeDirections += "0;";
-			else if (oldCurrBlock.getY() > currentBlock.getY())
+			    lastDirection = 0;
+			    }
+			else if (oldCurrBlock.getY() > currentBlock.getY()) {
 			    routeDirections += "1;";
-			else if (oldCurrBlock.getY() < currentBlock.getY())
+			    lastDirection = 1;
+			    }
+			else if (oldCurrBlock.getY() < currentBlock.getY()) {
 			    routeDirections += "3;";
+			    lastDirection = 3;
+			    }
 			
 			route.push(currentBlock);
 			visited.add(currentBlock);            
@@ -167,11 +181,16 @@ public class Ant {
 
 		for (Block b : neighbours) {
 			Floor f = (Floor)b;
-			if (neighbours.size() == 3) {
-			    
-			}
 			totalPheromone += f.getPheromone();
 		}
+		
+		if (neighbours.size() == 4) {
+		    float random = (float)(Math.random());
+		    if ((random -= 0.50f) < 0) return (Floor) neighbours.get(3);
+        }
+//		else if (neighbours.size() == 3) {
+//		    return (Floor) neighbours.get(0);
+//        }
 
 		float random = (float)(Math.random());
 
