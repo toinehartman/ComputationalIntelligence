@@ -1,3 +1,9 @@
+/**
+ * 
+ * @author Christian
+ *
+ */
+
 public class TSP_GA {
 
     public static void main(String[] args) {
@@ -57,7 +63,7 @@ public class TSP_GA {
 
         // Print the results
         System.out.println("Evolving... :D");
-        System.out.println("Final distanceof the route: " + population.getFittest().getDistance());
+        System.out.println("Final distance of the route: " + population.getFittest().getDistance());
         System.out.println("Chromosome:");
         System.out.println(population.getFittest());
     }

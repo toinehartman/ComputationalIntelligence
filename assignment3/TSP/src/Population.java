@@ -1,3 +1,9 @@
+/**
+ * 
+ * @author Christian
+ *
+ */
+
 public class Population {
 
     // Dataset for all the routes in a population.

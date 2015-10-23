@@ -1,3 +1,9 @@
+/**
+ * 
+ * @author Christian
+ *
+ */
+
 public class Product {
     int x;
     int y;
@@ -37,9 +43,9 @@ public class Product {
     }
     
     /**
-     * Return the distance between two specified cities.
-     * @param city
-     * @return the distance between the two cities.
+     * Return the distance between two specified products.
+     * @param products
+     * @return the distance between the two products.
      */
     public double distanceTo(Product product){
         // For the ants problem, you should use the ACO algorithm instead of this.

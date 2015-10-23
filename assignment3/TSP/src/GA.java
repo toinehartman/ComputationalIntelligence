@@ -1,3 +1,9 @@
+/**
+ * 
+ * @author Christian
+ *
+ */
+
 public class GA {
 
     // Parameters of the genetic algorithm
