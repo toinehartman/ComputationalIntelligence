@@ -69,7 +69,7 @@ public class Ant {
 
 	public void move() {
 		if (!finished) {
-		    Main.grid.repaint();
+//		    Main.grid.repaint();
 //		    Main.grid.xyz.repaint();
 			Block oldCurrBlock = currentBlock;
 			List<Block> currentNeighbours = getNeighbours(currentBlock);

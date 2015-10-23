@@ -49,7 +49,6 @@ public class Grid extends Canvas {
 		for (Point point : m.floorPoints) {
 			Floor f = (Floor)m.getMatrix()[point.x][point.y];
 			float green = Math.min(f.getPheromone(), 255);//(f.getPheromone() / highest) * 255f;
-//			System.out.println(green);
 			fillXY(point.x, point.y, g, new Color(0, (int)green, 0));
 		}
 	}
@@ -69,7 +68,6 @@ public class Grid extends Canvas {
 		fillFloors(g);
 		
 		for (Ant a : Iteration.ants) {
-		    System.out.println("grid: " + a);
 		    fillAnt(a.getX(), a.getY(), g, Color.GREEN);
 		}
 	}

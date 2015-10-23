@@ -40,7 +40,7 @@ public class Iteration {
 				a.move();
 //				System.out.println(maze.toStringAnt(a));
 			}
-    		Main.grid.repaint();
+//    		Main.grid.repaint();
 //    		Main.grid.xyz.repaint();
     	}
     	

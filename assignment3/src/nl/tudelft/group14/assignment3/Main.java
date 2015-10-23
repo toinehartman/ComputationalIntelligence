@@ -9,8 +9,6 @@ import java.util.List;
 
 public class Main {
 
-    public static VisualizerPheromone grid;
-    
     public static void main(String[] args) throws FileNotFoundException {
         Maze m;
         
@@ -28,15 +26,13 @@ public class Main {
         System.out.println("Loading matrix from file...");
         m = Maze.loadFile(mazeName, pheromone, evaporation);
         
-        grid = new VisualizerPheromone("Test", 300, 300, m.getRows(), m.getCols(), m);
-        grid.setVisible(true); 
-        
         System.out.println("Calculating route...");
         
         for (int a = 0; a < max_iterations; a++) {
         	Iteration i = new Iteration(NOants);
         	i.iterate(m);
-        	System.out.print("\r" + ((float) a / (float) max_iterations) * 100f + "%");
+
+            System.out.print("\r" + (((float) (a + 1) / max_iterations)) * 100f + "%");
         }
 
         System.out.println();
