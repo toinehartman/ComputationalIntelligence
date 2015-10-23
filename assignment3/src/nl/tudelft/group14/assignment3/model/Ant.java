@@ -95,6 +95,7 @@ public class Ant {
 			route.push(currentBlock);
 			visited.add(currentBlock);            
 			pheromoneroute.add(currentBlock);
+//            System.out.println(maze.toStringAnt(this));
 			if (x == this.end[0] && y == this.end[1]) {
 				finished = true;
 			}

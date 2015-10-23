@@ -17,7 +17,7 @@ public class Main {
         float pheromone = 1000f;			//TODO needs implementation
         float evaporation = 0.95f;		//TODO needs implementation
         int max_iterations = 10;
-        int NOants = 10;
+        int NOants = 1;
         String mazeName = "easy";
 
         System.out.println("Loading products");
@@ -82,7 +82,6 @@ public class Main {
                 for (int a = 0; a < max_iterations; a++) {
                     Iteration it = new Iteration(NOants, product1, product2);
                     it.iterate(m);
-
                     System.out.print("\r" + (((float) a) / max_iterations) * 100.f + "%");
                 }
                 System.out.print('\r');
