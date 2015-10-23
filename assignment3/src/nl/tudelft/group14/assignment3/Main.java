@@ -15,15 +15,18 @@ public class Main {
         Maze m;
         
         //set parameters
-        float pheromone = 100f;			//TODO needs implementation
-        float evaporation = 0.1f;		//TODO needs implementation
+        float pheromone = 1000f;			//TODO needs implementation
+        float evaporation = 0.5f;		//TODO needs implementation
         int max_iterations = 10;
-        int NOants = 10;
+        int NOants = 100;
+        String mazeName = "medium";		
         
         System.out.println("Loading matrix from file...");
-        m = Maze.loadFile("insane");
+        m = Maze.loadFile(mazeName, pheromone, evaporation);
+        
         grid = new VisualizerPheromone("Test", 300, 300, m.getRows(), m.getCols(), m);
         grid.setVisible(true); 
+        
         System.out.println("Calculating route...");
         
         int counter = 0;

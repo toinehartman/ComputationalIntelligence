@@ -25,8 +25,8 @@ import java.util.regex.Pattern;
 public class Maze {
 
 	private static Block[][] matrix;
-	private final float pheromone = 100f;
-	private final float evaporate = 0.1f;
+	private float pheromone = 100f;
+	private float evaporate = 0.1f;
 	private Map<Stack<Block>, Float> pheromoneQueue; 
 	public List<Point> wallPoints = new ArrayList<>();
 	public List<Point> floorPoints = new ArrayList<>();
@@ -34,15 +34,17 @@ public class Maze {
     private int[] start;
     private int[] end;
 	
-    public Maze(int cols, int rows, int[] start, int[] end) {
+    public Maze(int cols, int rows, int[] start, int[] end, float pheromone, float evaporation) {
         matrix = new Block[cols][rows];
         pheromoneQueue = new HashMap<Stack<Block>, Float>();
 
+        this.pheromone = pheromone;
+        this.evaporate = evaporation;
         this.start = start;
         this.end = end;
     }
 
-    public static Maze loadFile(String maze_name) throws FileNotFoundException {
+    public static Maze loadFile(String maze_name, float pheromone, float evaporation) throws FileNotFoundException {
         String maze_file = "resources/" + maze_name + " maze.txt";
         String coords_file = "resources/" + maze_name + " coordinates.txt";
 
@@ -61,7 +63,7 @@ public class Maze {
         int cols = maze_scanner.nextInt();
         int rows = maze_scanner.nextInt();
 
-        Maze maze = new Maze(cols, rows, start, end);
+        Maze maze = new Maze(cols, rows, start, end, pheromone, evaporation);
 
         System.out.println("Reading maze values...");
         for (int row = 0; row < rows; row++) {
