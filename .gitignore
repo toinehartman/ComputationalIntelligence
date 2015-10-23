@@ -217,7 +217,7 @@ Temporary Items
 *.iml
 
 ## Directory-based project format:
-.idea/
+**/.idea/
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
@@ -247,7 +247,7 @@ Temporary Items
 ## Plugin-specific files:
 
 # IntelliJ
-/out/
+**/out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -265,7 +265,7 @@ fabric.properties
 *.iml
 
 ## Directory-based project format:
-.idea/
+**/.idea/
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
