@@ -3,6 +3,8 @@ package nl.tudelft.group14.assignment3;
 import nl.tudelft.group14.assignment3.model.*;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class Main {
@@ -31,16 +33,20 @@ public class Main {
         
         System.out.println("Calculating route...");
         
-        int counter = 0;
         for (int a = 0; a < max_iterations; a++) {
         	Iteration i = new Iteration(NOants);
         	i.iterate(m);
-        	counter++;
-        	System.out.print("\r" + (float)((float)counter/(float)max_iterations)*100f + "%");
-//            if (a % (max_iterations / 100) == 0) System.out.println((float) a / max_iterations * 100 + "%");
+        	System.out.print("\r" + ((float) a / (float) max_iterations) * 100f + "%");
         }
 
-        System.out.println(String.format("%s", Iteration.shortest_directions));
+        System.out.println();
+
+        try (FileOutputStream fos = new FileOutputStream("shortest_route_" + mazeName + ".txt");) {
+            fos.write(Iteration.shortest_directions.getBytes());
+        } catch (IOException e) {
+            System.out.println(String.format("%s", Iteration.shortest_directions));
+        }
+
         System.exit(0);
     }
 }
