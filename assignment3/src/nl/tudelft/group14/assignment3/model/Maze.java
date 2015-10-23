@@ -51,7 +51,7 @@ public class Maze {
         Scanner coord_scanner = new Scanner(new File(coords_file));
         coord_scanner.useDelimiter(Pattern.compile(",\\s|;\\s?"));
 
-        System.out.println("Reading start and end coordinates...");
+//        System.out.println("Reading start and end coordinates...");
         int[] start = {Integer.parseInt(coord_scanner.next().replace('\n', '\0').trim()),
                 Integer.parseInt(coord_scanner.next().replace('\n', '\0').trim())};
         int[] end = {Integer.parseInt(coord_scanner.next().replace('\n', '\0').trim()),
@@ -59,13 +59,13 @@ public class Maze {
 
         Scanner maze_scanner = new Scanner(new File(maze_file));
 
-        System.out.println("Reading maze dimensions...");
+//        System.out.println("Reading maze dimensions...");
         int cols = maze_scanner.nextInt();
         int rows = maze_scanner.nextInt();
 
         Maze maze = new Maze(cols, rows, start, end, pheromone, evaporation);
 
-        System.out.println("Reading maze values...");
+//        System.out.println("Reading maze values...");
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
             	int value = maze_scanner.nextInt();

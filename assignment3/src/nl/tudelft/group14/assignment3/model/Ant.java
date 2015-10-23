@@ -13,39 +13,34 @@ public class Ant {
 	private int x = 0;
 	private int y = 0;
 	private Block currentBlock;
-	private Stack<Block> route;
+	private Route route;
 	private Set<Block> pheromoneroute;
 	private Maze maze;
 	private Block[][] matrix;
 	private ArrayList<Block> visited;
 	private boolean finished;
 	private float pheromone;
-	private String routeDirections;
 	private int lastDirection;
 
 	private int[] start;
 	private int[] end;
 
-	public Stack<Block> getRoute() {
+	public Route getRoute() {
 		return route;
-	}
-
-	public void setRoute(Stack<Block> route) {
-		this.route = route;
 	}
 
 	public Ant (int x, int y, Maze maze, float pheromone, int[] start, int[] end) {
 		this.x = x;
 		this.y = y;
 		this.maze = maze;
-		route = new Stack<Block>();
+		route = new Route();
 		pheromoneroute = new HashSet<Block>();
 		visited = new ArrayList<Block>();
 		matrix = Maze.getMatrix();
 		finished = false;
 		currentBlock = matrix[start[0]][start[1]];
 		this.pheromone = pheromone;
-		routeDirections = maze.getStart()[0] + ", " + maze.getStart()[1] + ";\n";
+        route.addStart(start[0], start[1]);
 		lastDirection = 3;
 
 		this.start = start;
@@ -81,19 +76,19 @@ public class Ant {
 			setX(currentBlock.getX());
 			setY(currentBlock.getY());
 			if (oldCurrBlock.getX() > currentBlock.getX()) {
-			    routeDirections += "2;";
+                route.addDirection(2);
 			    lastDirection = 2;
 			    }
 			else if (oldCurrBlock.getX() < currentBlock.getX()) {
-			    routeDirections += "0;";
+                route.addDirection(0);
 			    lastDirection = 0;
 			    }
 			else if (oldCurrBlock.getY() > currentBlock.getY()) {
-			    routeDirections += "1;";
+                route.addDirection(1);
 			    lastDirection = 1;
 			    }
 			else if (oldCurrBlock.getY() < currentBlock.getY()) {
-			    routeDirections += "3;";
+			    route.addDirection(3);
 			    lastDirection = 3;
 			    }
 			
@@ -102,21 +97,9 @@ public class Ant {
 			pheromoneroute.add(currentBlock);
 			if (x == this.end[0] && y == this.end[1]) {
 				finished = true;
-				routeDirections = route.size() + ";\n" + routeDirections;
-//				System.out.println(routeDirections);
-				//                System.out.println(route.toString());
 			}
 		}
 	}
-
-
-	public String getRouteDirections() {
-        return routeDirections;
-    }
-
-    public void setRouteDirections(String routeDirections) {
-        this.routeDirections = routeDirections;
-    }
 
     public List<Block> getNeighbours(Block currentBlock){
 		List<Block> currentNeighbours = maze.getNeighbours(currentBlock);

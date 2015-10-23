@@ -1,25 +1,27 @@
 package nl.tudelft.group14.assignment3.model;
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.Stack;
-
-import nl.tudelft.group14.assignment3.Main;
 
 public class Iteration {
 
 	public static Stack<Block> shortest_route;
-	public static String shortest_directions;
 
     private int antAmount;
-    ArrayList<Set<Block>> routes;
     public static List<Ant> ants;
+
+    private int[] start;
+    private int[] end;
     
-    public Iteration(int antAmount)
+    public Iteration(int antAmount, int[] start, int[] end)
     {
         this.antAmount = antAmount;
         this.ants = new ArrayList<>();
+        this.start = start;
+        this.end = end;
     }
     
     public boolean isAllFinished() {
@@ -32,26 +34,20 @@ public class Iteration {
     
     public void iterate(Maze maze) {
     	for (int i = 0; i < antAmount; i++) {
-			ants.add(new Ant(0, 0, maze, 1000, maze.getStart(), maze.getEnd()));
+			ants.add(new Ant(0, 0, maze, 1000, start, end));
     	}
     	
     	while (!isAllFinished()) {
     		for (Ant a : ants) {
 				a.move();
-//				System.out.println(maze.toStringAnt(a));
 			}
-//    		Main.grid.repaint();
-//    		Main.grid.xyz.repaint();
     	}
     	
     	for (Ant a : ants) {
             if (shortest_route == null || a.getRoute().size() < shortest_route.size()) {
-//                System.out.println(a.getRoute().size());
                 shortest_route = a.getRoute();
-                shortest_directions = a.getRouteDirections();
             }
 			maze.applyPheromone(a);	
 		}
-    	//maze.applyPheromone();	
-    }    
+    }
 }
