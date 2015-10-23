@@ -1,11 +1,9 @@
 package nl.tudelft.group14.assignment3;
 
-import nl.tudelft.group14.assignment3.model.Grid;
-import nl.tudelft.group14.assignment3.model.Iteration;
-import nl.tudelft.group14.assignment3.model.Maze;
-import nl.tudelft.group14.assignment3.model.VisualizerPheromone;
+import nl.tudelft.group14.assignment3.model.*;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 public class Main {
 
@@ -19,8 +17,12 @@ public class Main {
         float evaporation = 0.5f;		//TODO needs implementation
         int max_iterations = 10;
         int NOants = 100;
-        String mazeName = "medium";		
-        
+        String mazeName = "medium";
+
+        System.out.println("Loading products");
+        List<Product> products = Product.loadProducts();
+        System.out.println("Read " + products.size() + " products from file!");
+
         System.out.println("Loading matrix from file...");
         m = Maze.loadFile(mazeName, pheromone, evaporation);
         
